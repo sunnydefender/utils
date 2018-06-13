@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sky.framework.task.dao.TaskDAO">
+  <resultMap id="BaseResultMap" type="com.sky.framework.task.entity.TaskPO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_key" jdbcType="VARCHAR" property="taskKey" />
+    <result column="param" jdbcType="VARCHAR" property="param" />
+    <result column="handler" jdbcType="VARCHAR" property="handler" />
+    <result column="business" jdbcType="VARCHAR" property="business" />
+    <result column="retry_strategy" jdbcType="INTEGER" property="retryStrategy" />
+    <result column="retry_interval" jdbcType="INTEGER" property="retryInterval" />
+    <result column="max_retry_times" jdbcType="INTEGER" property="maxRetryTimes" />
+    <result column="task_status" jdbcType="INTEGER" property="taskStatus" />
+    <result column="progress" jdbcType="INTEGER" property="progress" />
+    <result column="retried_times" jdbcType="INTEGER" property="retriedTimes" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="first_time" jdbcType="TIMESTAMP" property="firstTime" />
+    <result column="last_time" jdbcType="TIMESTAMP" property="lastTime" />
+    <result column="next_time" jdbcType="TIMESTAMP" property="nextTime" />
+    <result column="done_time" jdbcType="TIMESTAMP" property="doneTime" />
+    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+    <result column="inserted_time" jdbcType="TIMESTAMP" property="insertedTime" />
+    <result column="task_mode" jdbcType="INTEGER" property="taskMode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, task_key, param, handler, business, retry_strategy, retry_interval, max_retry_times, 
+    task_status, progress, retried_times, created_time, first_time, last_time, next_time, 
+    done_time, updated_time, inserted_time, task_mode
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_task
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectListByTaskKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_task
+    where task_key = #{taskKey,jdbcType=VARCHAR}
+  </select>
+  <insert id="insert" parameterType="com.sky.framework.task.entity.TaskPO">
+    insert into t_task (id, task_key, param, 
+      handler, business, retry_strategy, 
+      retry_interval, max_retry_times, task_status, 
+      progress, retried_times, created_time, 
+      first_time, last_time, next_time, 
+      done_time, updated_time, inserted_time, task_mode)
+    values (#{id,jdbcType=BIGINT}, #{taskKey,jdbcType=VARCHAR}, #{param,jdbcType=VARCHAR}, 
+      #{handler,jdbcType=VARCHAR}, #{business,jdbcType=VARCHAR}, #{retryStrategy,jdbcType=INTEGER}, 
+      #{retryInterval,jdbcType=INTEGER}, #{maxRetryTimes,jdbcType=INTEGER}, #{taskStatus,jdbcType=INTEGER}, 
+      #{progress,jdbcType=INTEGER}, #{retriedTimes,jdbcType=INTEGER}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{firstTime,jdbcType=TIMESTAMP}, #{lastTime,jdbcType=TIMESTAMP}, #{nextTime,jdbcType=TIMESTAMP}, 
+      #{doneTime,jdbcType=TIMESTAMP}, #{updatedTime,jdbcType=TIMESTAMP}, #{insertedTime,jdbcType=TIMESTAMP},
+      #{taskMode,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sky.framework.task.entity.TaskPO">
+    insert into t_task
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="taskKey != null">
+        task_key,
+      </if>
+      <if test="param != null">
+        param,
+      </if>
+      <if test="handler != null">
+        handler,
+      </if>
+      <if test="business != null">
+        business,
+      </if>
+      <if test="retryStrategy != null">
+        retry_strategy,
+      </if>
+      <if test="retryInterval != null">
+        retry_interval,
+      </if>
+      <if test="maxRetryTimes != null">
+        max_retry_times,
+      </if>
+      <if test="taskStatus != null">
+        task_status,
+      </if>
+      <if test="progress != null">
+        progress,
+      </if>
+      <if test="retriedTimes != null">
+        retried_times,
+      </if>
+      <if test="createdTime != null">
+        created_time,
+      </if>
+      <if test="firstTime != null">
+        first_time,
+      </if>
+      <if test="lastTime != null">
+        last_time,
+      </if>
+      <if test="nextTime != null">
+        next_time,
+      </if>
+      <if test="doneTime != null">
+        done_time,
+      </if>
+      <if test="updatedTime != null">
+        updated_time,
+      </if>
+      <if test="insertedTime != null">
+        inserted_time,
+      </if>
+      <if test="taskMode != null">
+        task_mode,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="taskKey != null">
+        #{taskKey,jdbcType=VARCHAR},
+      </if>
+      <if test="param != null">
+        #{param,jdbcType=VARCHAR},
+      </if>
+      <if test="handler != null">
+        #{handler,jdbcType=VARCHAR},
+      </if>
+      <if test="business != null">
+        #{business,jdbcType=VARCHAR},
+      </if>
+      <if test="retryStrategy != null">
+        #{retryStrategy,jdbcType=INTEGER},
+      </if>
+      <if test="retryInterval != null">
+        #{retryInterval,jdbcType=INTEGER},
+      </if>
+      <if test="maxRetryTimes != null">
+        #{maxRetryTimes,jdbcType=INTEGER},
+      </if>
+      <if test="taskStatus != null">
+        #{taskStatus,jdbcType=INTEGER},
+      </if>
+      <if test="progress != null">
+        #{progress,jdbcType=INTEGER},
+      </if>
+      <if test="retriedTimes != null">
+        #{retriedTimes,jdbcType=INTEGER},
+      </if>
+      <if test="createdTime != null">
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="firstTime != null">
+        #{firstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastTime != null">
+        #{lastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nextTime != null">
+        #{nextTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="doneTime != null">
+        #{doneTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedTime != null">
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="insertedTime != null">
+        #{insertedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="taskMode != null">
+        #{taskMode,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sky.framework.task.entity.TaskPO">
+    update t_task
+    <set>
+      <if test="taskKey != null">
+        task_key = #{taskKey,jdbcType=VARCHAR},
+      </if>
+      <if test="param != null">
+        param = #{param,jdbcType=VARCHAR},
+      </if>
+      <if test="handler != null">
+        handler = #{handler,jdbcType=VARCHAR},
+      </if>
+      <if test="business != null">
+        business = #{business,jdbcType=VARCHAR},
+      </if>
+      <if test="retryStrategy != null">
+        retry_strategy = #{retryStrategy,jdbcType=INTEGER},
+      </if>
+      <if test="retryInterval != null">
+        retry_interval = #{retryInterval,jdbcType=INTEGER},
+      </if>
+      <if test="maxRetryTimes != null">
+        max_retry_times = #{maxRetryTimes,jdbcType=INTEGER},
+      </if>
+      <if test="taskStatus != null">
+        task_status = #{taskStatus,jdbcType=INTEGER},
+      </if>
+      <if test="progress != null">
+        progress = #{progress,jdbcType=INTEGER},
+      </if>
+      <if test="retriedTimes != null">
+        retried_times = #{retriedTimes,jdbcType=INTEGER},
+      </if>
+      <if test="createdTime != null">
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="firstTime != null">
+        first_time = #{firstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastTime != null">
+        last_time = #{lastTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nextTime != null">
+        next_time = #{nextTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="doneTime != null">
+        done_time = #{doneTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedTime != null">
+        updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="taskMode != null">
+        task_mode = #{taskMode,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sky.framework.task.entity.TaskPO">
+    update t_task
+    set task_key = #{taskKey,jdbcType=VARCHAR},
+      param = #{param,jdbcType=VARCHAR},
+      handler = #{handler,jdbcType=VARCHAR},
+      business = #{business,jdbcType=VARCHAR},
+      retry_strategy = #{retryStrategy,jdbcType=INTEGER},
+      retry_interval = #{retryInterval,jdbcType=INTEGER},
+      max_retry_times = #{maxRetryTimes,jdbcType=INTEGER},
+      task_status = #{taskStatus,jdbcType=INTEGER},
+      progress = #{progress,jdbcType=INTEGER},
+      retried_times = #{retriedTimes,jdbcType=INTEGER},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      first_time = #{firstTime,jdbcType=TIMESTAMP},
+      last_time = #{lastTime,jdbcType=TIMESTAMP},
+      next_time = #{nextTime,jdbcType=TIMESTAMP},
+      done_time = #{doneTime,jdbcType=TIMESTAMP},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      task_mode = #{taskMode,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
