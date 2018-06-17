@@ -6,13 +6,13 @@ import java.io.Serializable;
 
 public class BaseResultDTO implements Serializable {
 	private static final long serialVersionUID = 2045849073156171052L;
-	private String result;
+	private int result;
 	private String failCode;
 	private String failReason;
-	public String getResult() {
+	public int getResult() {
 		return result;
 	}
-	public void setResult(String result) {
+	public void setResult(int result) {
 		this.result = result;
 	}
 	public String getFailCode() {
@@ -32,7 +32,7 @@ public class BaseResultDTO implements Serializable {
 
 	}
 
-	private BaseResultDTO(String result, String failCode, String failReason) {
+	private BaseResultDTO(int result, String failCode, String failReason) {
 		this.result = result;
 		this.failCode = failCode;
 		this.failReason = failReason;

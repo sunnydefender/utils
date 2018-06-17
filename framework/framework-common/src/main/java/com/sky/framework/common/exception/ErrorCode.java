@@ -4,17 +4,14 @@ package com.sky.framework.common.exception;
  * Created by easyfun on 2018/4/28.
  */
 public interface ErrorCode {
-    /** 资金系统成功状态码 */
-    public static final String SUCCESS = "SUCCESS";
+    /** 成功状态码 */
+    public static final int SUCCESS = 98;
 
-    /** 资金系统失败状态码 */
-    public static final String FAIL = "FAIL";
+    /** 失败状态码 */
+    public static final int FAIL = 99;
 
-    /** 资金系统已受理状态码 */
-    public static final String ACCEPTED = "ACCEPTED";
-
-    /** 资金系统未知状态码 */
-    public static final String UNKNOWN = "UNKNOWN";
+    /** 已受理状态码 */
+    public static final int ACCEPTED = 0;
 
     String getFailCode();
 }
