@@ -9,7 +9,7 @@ import com.sky.framework.task.enums.RetryStrategy;
 import com.sky.framework.task.enums.ExecuteStrategy;
 import com.sky.framework.task.enums.TaskStatus;
 import com.sky.framework.task.handler.TaskExecuteResult;
-import com.sky.framework.task.handler.TaskHandlerInterface;
+import com.sky.framework.task.handler.ITaskHandler;
 import com.sky.framework.task.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +19,13 @@ import java.util.Date;
 public class SpecialExecuteRunnable implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(SpecialExecuteRunnable.class);
 
-    private TaskHandlerInterface taskHandlerInterface;
+    private ITaskHandler taskHandlerInterface;
     private TaskManager taskManager;
     private String handler;
     private int sleepMilis = 5000;
     private ExecuteStrategy executeStrategy; /* 线程执行模式: 1-等间隔执行一个任务; 其他-等间隔执行到任务获取失败 */
 
-    public SpecialExecuteRunnable(String handler, int sleepMilis, ExecuteStrategy executeStrategy, TaskHandlerInterface taskHandlerInterface, TaskManager taskManager) {
+    public SpecialExecuteRunnable(String handler, int sleepMilis, ExecuteStrategy executeStrategy, ITaskHandler taskHandlerInterface, TaskManager taskManager) {
         this.handler = handler;
         if (sleepMilis > 0) {
             this.sleepMilis = sleepMilis;
@@ -81,7 +81,7 @@ public class SpecialExecuteRunnable implements Runnable {
         }
 
         switch (result.getTaskResult()) {
-            case SUCCESSFUL:
+            case SUCCESS:
                 successTask(result, taskPO);
                 break;
             case FAIL:

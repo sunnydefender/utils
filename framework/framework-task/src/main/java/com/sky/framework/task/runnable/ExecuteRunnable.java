@@ -8,7 +8,7 @@ import com.sky.framework.task.entity.builder.TaskPOBuilder;
 import com.sky.framework.task.enums.RetryStrategy;
 import com.sky.framework.task.enums.TaskStatus;
 import com.sky.framework.task.handler.TaskExecuteResult;
-import com.sky.framework.task.handler.TaskHandlerInterface;
+import com.sky.framework.task.handler.ITaskHandler;
 import com.sky.framework.task.util.ThreadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +19,10 @@ import java.util.Map;
 public class ExecuteRunnable implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExecuteRunnable.class);
 
-    private Map<String, TaskHandlerInterface> taskHandlerMap;
+    private Map<String, ITaskHandler> taskHandlerMap;
     private TaskManager taskManager;
 
-    public ExecuteRunnable(Map<String, TaskHandlerInterface> taskHandlerMap, TaskManager taskManager) {
+    public ExecuteRunnable(Map<String, ITaskHandler> taskHandlerMap, TaskManager taskManager) {
         this.taskHandlerMap = taskHandlerMap;
         this.taskManager = taskManager;
     }
@@ -36,7 +36,7 @@ public class ExecuteRunnable implements Runnable {
                 if (null == taskPO) {
                     ThreadUtil.safeSleep(5000);
                 } else {
-                    TaskHandlerInterface handler = taskHandlerMap.get(taskPO.getHandler());
+                    ITaskHandler handler = taskHandlerMap.get(taskPO.getHandler());
                     if (null == handler) {
                         LOGGER.error("任务handler不存在, handlerName={}", taskPO.getHandler());
                         taskManager.deleteTask(null, taskPO.getTaskKey());
@@ -52,7 +52,7 @@ public class ExecuteRunnable implements Runnable {
         }
     }
 
-    private void executeTask(TaskHandlerInterface handler, TaskPO taskPO) {
+    private void executeTask(ITaskHandler handler, TaskPO taskPO) {
         if (null == taskPO.getFirstTime()) {
             taskPO.setFirstTime(new Date());
         }
@@ -69,7 +69,7 @@ public class ExecuteRunnable implements Runnable {
         }
 
         switch (result.getTaskResult()) {
-            case SUCCESSFUL:
+            case SUCCESS:
                 successTask(result, taskPO);
                 break;
             case FAIL:

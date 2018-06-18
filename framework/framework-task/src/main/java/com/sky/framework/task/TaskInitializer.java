@@ -1,7 +1,7 @@
 package com.sky.framework.task;
 
-import com.sky.framework.task.handler.QuartzHandlerInterface;
-import com.sky.framework.task.handler.TaskHandlerInterface;
+import com.sky.framework.task.handler.IQuartzHandler;
+import com.sky.framework.task.handler.ITaskHandler;
 import com.sky.framework.task.util.TaskRedisLock;
 import com.sky.framework.task.runnable.*;
 import org.slf4j.Logger;
@@ -35,12 +35,12 @@ public class TaskInitializer implements ApplicationListener<ContextRefreshedEven
     public void onApplicationEvent(ContextRefreshedEvent event) {
         LOGGER.info("=======================>开始注册通用TaskHandler列表<=======================");
         Map<String, Object> beanMap = event.getApplicationContext().getBeansWithAnnotation(TaskHandler.class);
-        Map<String, TaskHandlerInterface> taskHandlerMap = (Map<String, TaskHandlerInterface>) event.getApplicationContext().getBean("taskHandlerMap");
+        Map<String, ITaskHandler> taskHandlerMap = (Map<String, ITaskHandler>) event.getApplicationContext().getBean("taskHandlerMap");
 
         for (Object beanObject : beanMap.values()) {
             TaskHandler annotation = beanObject.getClass().getAnnotation(TaskHandler.class);
             LOGGER.info("taskHandler: handlerName={}, simpleName={}, fullName={}", annotation.name(), beanObject.getClass().getSimpleName(), beanObject.getClass().getName());
-            taskHandlerMap.put(beanObject.getClass().getSimpleName(), (TaskHandlerInterface)beanObject);
+            taskHandlerMap.put(beanObject.getClass().getSimpleName(), (ITaskHandler)beanObject);
         }
 
         TaskManager taskManager = event.getApplicationContext().getBean("taskManager", TaskManager.class);
@@ -70,7 +70,7 @@ public class TaskInitializer implements ApplicationListener<ContextRefreshedEven
             String handler = annotation.getClass().getSimpleName();
             for (int i=0; i<annotation.threadCount(); i++) {
                 new Thread(new SpecialExecuteRunnable(handler, annotation.threadSleepMilis(), annotation.executeStrategy(),
-                    (TaskHandlerInterface) beanObject, taskManager), "special-execute-" + handler + "-" + i).start();
+                    (ITaskHandler) beanObject, taskManager), "special-execute-" + handler + "-" + i).start();
             }
         }
 
@@ -89,7 +89,7 @@ public class TaskInitializer implements ApplicationListener<ContextRefreshedEven
                     beanObject.getClass().getSimpleName(), beanObject.getClass().getName());
             String handler = beanObject.getClass().getSimpleName();
             Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(
-                    new QuartzRunnable(handler, (QuartzHandlerInterface)beanObject),
+                    new QuartzRunnable(handler, (IQuartzHandler)beanObject),
                     annotation.initialDelay(), annotation.delay(), annotation.unit());
         }
         LOGGER.info("=======================>完成启动定时Handler列表<=======================");

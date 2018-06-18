@@ -1,6 +1,6 @@
 package com.sky.framework.task.runnable;
 
-import com.sky.framework.task.handler.QuartzHandlerInterface;
+import com.sky.framework.task.handler.IQuartzHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,9 +8,9 @@ public class QuartzRunnable implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(QuartzRunnable.class);
 
     private String handler;
-    private QuartzHandlerInterface quartzHandler;
+    private IQuartzHandler quartzHandler;
 
-    public QuartzRunnable(String handler, QuartzHandlerInterface quartzHandler) {
+    public QuartzRunnable(String handler, IQuartzHandler quartzHandler) {
         this.handler = handler;
         this.quartzHandler = quartzHandler;
     }
