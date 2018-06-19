@@ -1,8 +1,10 @@
 package com.sky.framework.task.runnable;
 
+import com.sky.framework.task.entity.PopTask;
 import com.sky.framework.task.entity.TaskPO;
 import com.sky.framework.task.TaskManager;
 import com.sky.framework.task.entity.builder.TaskPOBuilder;
+import com.sky.framework.task.enums.PopTaskResult;
 import com.sky.framework.task.enums.TaskStatus;
 import com.sky.framework.task.util.TaskRedisLock;
 import com.sky.framework.task.util.ThreadUtil;
@@ -27,6 +29,8 @@ public class PendRunnable implements Runnable {
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             boolean lock = false;
+            PopTask popTask = null;
+
             try {
                 lock = taskRedisLock.lockPendingTask(TaskRedisLock.LOCK_TASK_PENDING);
                 if (false == lock) {
@@ -34,20 +38,20 @@ public class PendRunnable implements Runnable {
                     continue;
                 }
 
-                TaskPO taskPO = taskManager.popPendingTask(null, new Date());
-
-                if (null == taskPO) {
-                    ThreadUtil.safeSleep(5000);
-                } else {
-                    // 执行任务
-                    executeTask(taskPO);
+                popTask = taskManager.popPendingTask(null, new Date());
+                if (PopTaskResult.SUCCESS == popTask.getPopTaskResult()) {
+                    executeTask(popTask.getTaskPO());
                 }
             } catch (Exception e) {
                 LOGGER.error("任务执行出错.", e);
             } finally {
                 if (lock) {
                     taskRedisLock.unlockPendingTask(TaskRedisLock.LOCK_TASK_PENDING);
-                } else {
+                }
+
+                if (null == popTask) {
+                    ThreadUtil.safeSleep(5000);
+                } else if (null != popTask && PopTaskResult.FAIL_SLEEP == popTask.getPopTaskResult()) {
                     ThreadUtil.safeSleep(5000);
                 }
             }

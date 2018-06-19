@@ -80,7 +80,7 @@ public class TaskRedisLock {
     }
 
     public String buildSpecialTaskLockId(String handler) {
-        return LOCK_TASK_PENDING + ":" + handler;
+        return LOCK_TASK_PENDING_SPECIAL;
     }
 
     /**

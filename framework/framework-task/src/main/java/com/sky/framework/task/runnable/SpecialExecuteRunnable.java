@@ -1,6 +1,8 @@
 package com.sky.framework.task.runnable;
 
 import com.alibaba.fastjson.JSON;
+import com.sky.framework.task.entity.PopTask;
+import com.sky.framework.task.enums.PopTaskResult;
 import com.sky.framework.task.util.DateUtil;
 import com.sky.framework.task.TaskManager;
 import com.sky.framework.task.entity.TaskPO;
@@ -39,11 +41,15 @@ public class SpecialExecuteRunnable implements Runnable {
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                TaskPO taskPO = taskManager.popExecutingTask(handler, new Date());
+                PopTask popTask = taskManager.popExecutingTask(handler, new Date());
 
-                if (null == taskPO) {
+                if (PopTaskResult.FAIL_SLEEP == popTask.getPopTaskResult()) {
                     ThreadUtil.safeSleep(sleepMilis);
-                } else {
+                    continue;
+                }
+
+                if (PopTaskResult.SUCCESS == popTask.getPopTaskResult()) {
+                    TaskPO taskPO = popTask.getTaskPO();
                     if (!handler.equals(taskPO.getHandler())) {
                         LOGGER.error("任务handler不存在, handlerName={}", taskPO.getHandler());
                         taskManager.deleteTask(handler, taskPO.getTaskKey());
@@ -60,6 +66,7 @@ public class SpecialExecuteRunnable implements Runnable {
                 }
             } catch (Exception e) {
                 LOGGER.error("任务执行出错.", e);
+                ThreadUtil.safeSleep(sleepMilis);
             }
         }
     }

@@ -1,8 +1,11 @@
 package com.sky.framework.task;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sky.framework.task.entity.PopTask;
 import com.sky.framework.task.entity.TaskPO;
+import com.sky.framework.task.entity.builder.PopTaskBuilder;
 import com.sky.framework.task.entity.builder.TaskPOBuilder;
+import com.sky.framework.task.enums.PopTaskResult;
 import com.sky.framework.task.util.DateUtil;
 import com.sky.framework.task.util.JsonUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -72,17 +75,17 @@ public class TaskManager {
         return true;
     }
 
-    public TaskPO popPendingTask(String handler, Date date) {
+    public PopTask popPendingTask(String handler, Date date) {
         String key = TaskRedisKey.buildKeyPending(handler);
 
         //必须在消费处加锁
         Set<ZSetOperations.TypedTuple<String>> taskKeys = taskRedisTemplate.opsForZSet().rangeByScoreWithScores(key, 0, date.getTime(), 0, 1);
         if (CollectionUtils.isEmpty(taskKeys)) {
-            return null;
+            return PopTaskBuilder.build(null, PopTaskResult.FAIL_SLEEP);
         }
         if (taskKeys.size() > 1) {
             LOGGER.error("获取pending错误, size={}", taskKeys.size());
-            return null;
+            return PopTaskBuilder.build(null, PopTaskResult.FAIL_SLEEP);
         }
 
         String taskKey = null;
@@ -92,7 +95,7 @@ public class TaskManager {
         if (StringUtils.isBlank(taskKey)) {
             LOGGER.error("找不到任务信息t_task:pending:zset，taskKey={}", taskKey);
             taskRedisTemplate.opsForZSet().remove(key, taskKey);
-            return null;
+            return PopTaskBuilder.build(null, PopTaskResult.TRY_NEXT);
         }
 
         //改t_task:pending:zset,当前时间+30分
@@ -101,22 +104,22 @@ public class TaskManager {
         if (StringUtils.isBlank(taskInfo)) {
             LOGGER.error("找不到任务信息t_task:info:hash，taskKey={}", taskKey);
             taskRedisTemplate.opsForZSet().remove(key, taskKey);
-            return null;
+            return PopTaskBuilder.build(null, PopTaskResult.TRY_NEXT);
         }
-        return JSONObject.parseObject(taskInfo, TaskPO.class);
+        return PopTaskBuilder.build(JSONObject.parseObject(taskInfo, TaskPO.class), PopTaskResult.SUCCESS);
     }
 
-    public TaskPO popExecutingTask(String handler, Date date) {
+    public PopTask popExecutingTask(String handler, Date date) {
         String key = TaskRedisKey.buildKeyExecuting(handler);
         //TODO:后续加锁
         Set<ZSetOperations.TypedTuple<String>> taskKeys = taskRedisTemplate.opsForZSet().rangeByScoreWithScores(key, 0, date.getTime(), 0, 1);
         if (CollectionUtils.isEmpty(taskKeys)) {
             LOGGER.debug("获取executing，size=0");
-            return null;
+            return PopTaskBuilder.build(null, PopTaskResult.FAIL_SLEEP);
         }
         if (taskKeys.size() > 1) {
             LOGGER.error("获取executing错误, size={}", taskKeys.size());
-            return null;
+            return PopTaskBuilder.build(null, PopTaskResult.FAIL_SLEEP);
         }
 
         String taskKey =  null;
@@ -125,21 +128,21 @@ public class TaskManager {
         }
         if (0 == taskRedisTemplate.opsForZSet().remove(key, taskKey)) {
             LOGGER.debug("获取executing失败, 移除失败, taskKey={}", taskKey);
-            return null;
+            return PopTaskBuilder.build(null, PopTaskResult.TRY_NEXT);
         }
 
         String taskInfo = (String) taskRedisTemplate.opsForHash().get(TaskRedisKey.buildKeyInfo(handler), taskKey);
         if (StringUtils.isBlank(taskInfo)) {
             LOGGER.debug("找不到任务信息t_task:info:hash, taskKey={}", taskKey);
             taskRedisTemplate.opsForZSet().remove(key, taskKey);
-            return null;
+            return PopTaskBuilder.build(null, PopTaskResult.TRY_NEXT);
         }
         TaskPO taskPO = JSONObject.parseObject(taskInfo, TaskPO.class);
 
         Date nextTime = taskPO.getNextTime()==null ? new Date() : taskPO.getNextTime();
         nextTime = DateUtil.addMiliSeconds(nextTime, taskPO.getRetryInterval());
         taskRedisTemplate.opsForZSet().add(TaskRedisKey.buildKeyPending(handler), taskKey, DateUtil.addMinutes(nextTime, PENDING_TIME_OUT_MINUTES).getTime());
-        return taskPO;
+        return PopTaskBuilder.build(taskPO, PopTaskResult.SUCCESS);
     }
 
     public void deleteTask(String handler, String taskKey) {

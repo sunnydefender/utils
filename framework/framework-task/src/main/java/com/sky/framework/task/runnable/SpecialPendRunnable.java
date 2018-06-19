@@ -2,8 +2,10 @@ package com.sky.framework.task.runnable;
 
 import com.sky.framework.task.TaskManager;
 import com.sky.framework.task.TaskRedisKey;
+import com.sky.framework.task.entity.PopTask;
 import com.sky.framework.task.entity.TaskPO;
 import com.sky.framework.task.entity.builder.TaskPOBuilder;
+import com.sky.framework.task.enums.PopTaskResult;
 import com.sky.framework.task.enums.TaskStatus;
 import com.sky.framework.task.util.TaskRedisLock;
 import com.sky.framework.task.util.ThreadUtil;
@@ -17,7 +19,7 @@ public class SpecialPendRunnable implements Runnable {
 
     private TaskManager taskManager;
     private TaskRedisLock taskRedisLock;
-    private String handler = TaskRedisKey.TASK_EXECUTING_SPECIAL;
+    private String handler = TaskRedisKey.TASK_PENDING_SPECIAL;
 
     public SpecialPendRunnable(TaskManager taskManager, TaskRedisLock taskRedisLock) {
         this.taskManager = taskManager;
@@ -28,7 +30,8 @@ public class SpecialPendRunnable implements Runnable {
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             boolean lock = false;
-            String lockId = taskRedisLock.buildSpecialTaskLockId(TaskRedisLock.LOCK_TASK_PENDING_SPECIAL);
+            PopTask popTask = null;
+            String lockId = taskRedisLock.buildSpecialTaskLockId(handler);
             try {
                 lock = taskRedisLock.lockPendingTask(lockId);
                 if (false == lock) {
@@ -36,20 +39,21 @@ public class SpecialPendRunnable implements Runnable {
                     continue;
                 }
 
-                TaskPO taskPO = taskManager.popPendingTask(handler, new Date());
-
-                if (null == taskPO) {
-                    ThreadUtil.safeSleep(5000);
-                } else {
+                popTask = taskManager.popPendingTask(handler, new Date());
+                if (PopTaskResult.SUCCESS == popTask.getPopTaskResult()) {
                     // 执行任务
-                    executeTask(taskPO);
+                    executeTask(popTask.getTaskPO());
                 }
             } catch (Exception e) {
                 LOGGER.error("任务执行出错.", e);
             } finally {
                 if (lock) {
                     taskRedisLock.unlockPendingTask(lockId);
-                } else {
+                }
+
+                if (null == popTask) {
+                    ThreadUtil.safeSleep(5000);
+                } else if (null != popTask && PopTaskResult.FAIL_SLEEP == popTask.getPopTaskResult()) {
                     ThreadUtil.safeSleep(5000);
                 }
             }
