@@ -3,7 +3,7 @@ package com.sky.framework.task.enums;
 import com.sky.framework.task.mybatis.IntegerValuedEnum;
 
 public enum TaskResult implements IntegerValuedEnum {
-    SUCCESSFUL(1),
+    SUCCESS(1),
     FAIL(2),
     RETRY(3),
     ;

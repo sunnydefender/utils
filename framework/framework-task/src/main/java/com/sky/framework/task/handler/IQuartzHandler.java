@@ -1,6 +1,6 @@
 package com.sky.framework.task.handler;
 
-public interface QuartzHandlerInterface {
+public interface IQuartzHandler {
     /**
      * 注意taskPO不可变
      * @return
