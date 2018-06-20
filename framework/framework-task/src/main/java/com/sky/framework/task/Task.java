@@ -19,7 +19,7 @@ public class Task {
     private String param;
     private String handler;
     private String business;
-    private RetryStrategy retryStrategy;
+    private RetryStrategy retryStrategy = RetryStrategy.NORMAL;
     private TaskMode taskMode = TaskMode.NORMAL;
     /** 最大重试次数 */
     private int maxRetryTimes = DEFAULT_MAX_RETRY_TIMES;
