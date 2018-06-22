@@ -28,6 +28,47 @@ public class Task {
 
     private Date nextTime = new Date();
 
+    public static Task build(String handler, String taskKey) {
+        Task task = new Task();
+        task.taskKey = taskKey;
+        task.handler = handler;
+        return task;
+    }
+
+    public static Task build(String handler, String taskKey, int maxRetryTimes) {
+        Task task = new Task();
+        task.taskKey = taskKey;
+        task.handler = handler;
+        task.maxRetryTimes = maxRetryTimes;
+        return task;
+    }
+
+    public static Task build(String handler, String taskKey, int maxRetryTimes, int retryInterval) {
+        Task task = new Task();
+        task.taskKey = taskKey;
+        task.handler = handler;
+        task.maxRetryTimes = maxRetryTimes;
+        task.retryInterval = retryInterval;
+        return task;
+    }
+
+    public static Task build(String handler, String taskKey, String param) {
+        Task task = new Task();
+        task.taskKey = taskKey;
+        task.handler = handler;
+        task.param = param;
+        return task;
+    }
+
+    public static Task build(String handler, String taskKey, String param, String business) {
+        Task task = new Task();
+        task.taskKey = taskKey;
+        task.handler = handler;
+        task.param = param;
+        task.business = business;
+        return task;
+    }
+
     public String getTaskKey() {
         return taskKey;
     }

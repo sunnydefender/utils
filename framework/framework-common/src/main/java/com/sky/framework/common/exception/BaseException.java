@@ -24,6 +24,11 @@ public class BaseException extends RuntimeException {
         super.initCause(e);
     }
 
+    public BaseException(ErrorCode errorCode, Throwable e) {
+        this.errorCode = errorCode;
+        super.initCause(e);
+    }
+
     public ErrorCode getErrorCode() {
         return errorCode;
     }

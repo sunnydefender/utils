@@ -17,4 +17,9 @@ public class BusinessException extends BaseException {
     public BusinessException(ErrorCode errorCode, String errorMessage, Throwable e) {
         super(errorCode, errorMessage, e);
     }
+
+    public BusinessException(ErrorCode errorCode, Throwable e) {
+        super(errorCode, e);
+    }
+
 }

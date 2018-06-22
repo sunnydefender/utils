@@ -11,7 +11,7 @@ public interface ErrorCode {
     public static final int FAIL = 99;
 
     /** 已受理状态码 */
-    public static final int ACCEPTED = 0;
+    public static final int ACCEPTED = 1;
 
     String getFailCode();
 }

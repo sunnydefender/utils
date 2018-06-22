@@ -17,7 +17,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface QuartzHandler {
 //    public String namespace() default "prd";
 
-
     /**
      * handler名称
      * @return
