@@ -6,6 +6,8 @@ public enum TaskResult implements IntegerValuedEnum {
     SUCCESS(1),
     FAIL(2),
     RETRY(3),
+    /** 迁移到其他队列 */
+    MOVE(4),
     ;
 
     private int value;

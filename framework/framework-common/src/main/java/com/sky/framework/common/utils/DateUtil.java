@@ -68,6 +68,44 @@ public class DateUtil {
         calendar.add(Calendar.DAY_OF_MONTH, days);
         return calendar.getTime();
     }
-    
-    
+
+	/**
+	 * 增加分钟
+	 * @param date
+	 * @param minutes
+	 * @return
+	 */
+	public static Date addMinutes(Date date, int minutes) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.MINUTE, minutes);
+		return calendar.getTime();
+	}
+
+	/**
+	 * 增加秒钟
+	 * @param date
+	 * @param seconds
+	 * @return
+	 */
+	public static Date addSeconds(Date date, int seconds) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.SECOND, seconds);
+		return calendar.getTime();
+	}
+
+	/**
+	 * 增加豪秒钟
+	 * @param date
+	 * @param miliSeconds
+	 * @return
+	 */
+	public static Date addMiliSeconds(Date date, int miliSeconds) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.MILLISECOND, miliSeconds);
+		return calendar.getTime();
+	}
+
 }

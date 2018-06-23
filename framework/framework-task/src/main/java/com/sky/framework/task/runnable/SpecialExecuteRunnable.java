@@ -97,6 +97,8 @@ public class SpecialExecuteRunnable implements Runnable {
             case RETRY:
                 retryTask(result, taskPO);
                 break;
+            case MOVE:
+                break;
         }
     }
 

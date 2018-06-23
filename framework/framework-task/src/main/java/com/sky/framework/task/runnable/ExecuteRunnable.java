@@ -85,6 +85,8 @@ public class ExecuteRunnable implements Runnable {
             case RETRY:
                 retryTask(result, taskPO);
                 break;
+            case MOVE:
+                break;
         }
     }
 

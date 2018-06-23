@@ -163,6 +163,10 @@ public class TaskManager {
         return safeUpdateRedisForRetryTask(taskPO);
     }
 
+    public boolean moveTask(TaskPO taskPO) {
+        return safeUpdateRedisForMoveTask(taskPO);
+    }
+
     public boolean timeoutSupplyRetryTask(TaskPO taskPO) {
         return safeUpdateRedisForRetryTask(taskPO);
     }
@@ -270,4 +274,13 @@ public class TaskManager {
         return true;
     }
 
+    private boolean safeUpdateRedisForMoveTask(TaskPO taskPO) {
+        // 1.插入t_task:info:hash
+        if (!insertTaskInfo(taskPO)) {
+            LOGGER.error("任务插入redis:t_task:info:hash失败, taskPO={}", JsonUtil.toJSONString(taskPO));
+            // TODO: 任务插入redis失败，增加监控
+            return false;
+        }
+        return true;
+    }
 }
