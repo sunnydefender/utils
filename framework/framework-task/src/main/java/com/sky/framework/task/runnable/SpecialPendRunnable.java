@@ -87,25 +87,25 @@ public class SpecialPendRunnable implements Runnable {
     }
 
     private void successFinishTask(TaskPO taskPO) {
-        Date current = new Date();
-        TaskPOBuilder.updateDoneTime(taskPO, current);
-        taskPO.setTaskStatus(TaskStatus.SUCCESSFUL.getValue());
+//        Date current = new Date();
+//        TaskPOBuilder.updateDoneTime(taskPO, current);
+//        taskPO.setTaskStatus(TaskStatus.SUCCESSFUL.getValue());
 
         taskManager.finishTask(taskPO);
     }
 
     private void moreRetryFailFinishTask(TaskPO taskPO) {
-        Date current = new Date();
-        TaskPOBuilder.updateDoneTime(taskPO, current);
-        taskPO.setTaskStatus(TaskStatus.MORE_RETRY_FAILED.getValue());
+//        Date current = new Date();
+//        TaskPOBuilder.updateDoneTime(taskPO, current);
+//        taskPO.setTaskStatus(TaskStatus.MORE_RETRY_FAILED.getValue());
 
         taskManager.finishTask(taskPO);
     }
 
     private void failFinishTask(TaskPO taskPO) {
-        Date current = new Date();
-        TaskPOBuilder.updateDoneTime(taskPO, current);
-        taskPO.setTaskStatus(TaskStatus.FAILED.getValue());
+//        Date current = new Date();
+//        TaskPOBuilder.updateDoneTime(taskPO, current);
+//        taskPO.setTaskStatus(TaskStatus.FAILED.getValue());
 
         taskManager.finishTask(taskPO);
     }

@@ -72,6 +72,8 @@ public class SpecialExecuteRunnable implements Runnable {
     }
 
     private void executeTask(TaskPO taskPO) {
+        Date current = new Date();
+        TaskPOBuilder.updateLastTime(taskPO, current);
         if (null == taskPO.getFirstTime()) {
             taskPO.setFirstTime(new Date());
         }
@@ -127,11 +129,11 @@ public class SpecialExecuteRunnable implements Runnable {
 
     private void exceptionRetryTask(TaskPO taskPO) {
         Date current = new Date();
-        TaskPOBuilder.updateLastTime(taskPO, current);
 
         taskPO.setNextTime(DateUtil.addMiliSeconds(taskPO.getNextTime(), taskPO.getRetryInterval()));
 
         if (taskPO.getRetryStrategy() == RetryStrategy.NORMAL.getValue() && taskPO.getRetriedTimes() >= taskPO.getMaxRetryTimes()) {
+            TaskPOBuilder.updateDoneTime(taskPO, current);
             taskPO.setTaskStatus(TaskStatus.MORE_RETRY_FAILED.getValue());
             taskManager.failTask(taskPO);
         } else {

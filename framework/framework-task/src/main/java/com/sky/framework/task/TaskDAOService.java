@@ -3,6 +3,7 @@ package com.sky.framework.task;
 import com.sky.framework.task.dao.TaskDAO;
 import com.sky.framework.task.entity.TaskPO;
 import com.sky.framework.task.util.JsonUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,7 @@ public class TaskDAOService {
         }
 
         taskPO.setInsertedTime(new Date());
-        if (taskPO.getParam().length() > 2048) {
+        if (null != taskPO.getParam() && taskPO.getParam().length() > 2048) {
             LOGGER.error("param字段太长截断, taskPO={}", JsonUtil.toJSONString(taskPO));
             taskPO.setParam(taskPO.getParam().substring(0, 2047));
         }
