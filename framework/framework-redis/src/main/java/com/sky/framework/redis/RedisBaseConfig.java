@@ -1,17 +1,17 @@
 package com.sky.framework.redis;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
-public class RedisData {
+public class RedisBaseConfig {
 	
 	@Autowired
 	private StringRedisTemplate redisTemplate;
@@ -23,7 +23,7 @@ public class RedisData {
 	/** 更新时间间隔(分钟) */
 	private int refreshInterval = 5;
 	
-	private static final String baseDataRedisKey = "sky.ico.basedata";
+	private static final String baseDataRedisKey = "base.config";
 	
 	/**
 	 * 获取基础数据

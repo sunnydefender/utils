@@ -1,18 +1,18 @@
 package com.sky.framework.common.dto.base;
 
-import com.sky.framework.common.exception.ErrorCode;
+import com.sky.framework.common.enums.Result;
 
 import java.io.Serializable;
 
 public class BaseResultDTO implements Serializable {
 	private static final long serialVersionUID = 2045849073156171052L;
-	private int result;
+	private Result result;
 	private String failCode;
 	private String failReason;
-	public int getResult() {
+	public Result getResult() {
 		return result;
 	}
-	public void setResult(int result) {
+	public void setResult(Result result) {
 		this.result = result;
 	}
 	public String getFailCode() {
@@ -32,30 +32,30 @@ public class BaseResultDTO implements Serializable {
 
 	}
 
-	private BaseResultDTO(int result, String failCode, String failReason) {
-		this.result = result;
+	private BaseResultDTO(Result resultStatus, String failCode, String failReason) {
+		this.result = resultStatus;
 		this.failCode = failCode;
 		this.failReason = failReason;
 	}
 
 	public static BaseResultDTO success() {
-		return new BaseResultDTO(ErrorCode.SUCCESS, null, null);
+		return new BaseResultDTO(Result.SUCCESS, null, null);
 	}
 
 	public static BaseResultDTO accepted() {
-		return new BaseResultDTO(ErrorCode.ACCEPTED, null, null);
+		return new BaseResultDTO(Result.ACCEPTED, null, null);
 	}
 
 	public static BaseResultDTO fail() {
-		return new BaseResultDTO(ErrorCode.FAIL, null, null);
+		return new BaseResultDTO(Result.FAIL, null, null);
 	}
 
 	public static BaseResultDTO fail(String failCode) {
-		return new BaseResultDTO(ErrorCode.FAIL, failCode, null);
+		return new BaseResultDTO(Result.FAIL, failCode, null);
 	}
 
 	public static BaseResultDTO fail(String failCode, String failReason) {
-		return new BaseResultDTO(ErrorCode.FAIL, failCode, failReason);
+		return new BaseResultDTO(Result.FAIL, failCode, failReason);
 	}
 
 }
