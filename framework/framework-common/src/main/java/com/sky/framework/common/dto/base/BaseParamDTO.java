@@ -12,7 +12,6 @@ public class BaseParamDTO implements Serializable {
 
 	private String requestRefNo;
 
-	@NotNull
 	private UserAgent userAgent;
 
 	@NotBlank
