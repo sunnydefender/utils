@@ -12,10 +12,18 @@ public class BaseParamDTO implements Serializable {
 
 	private String requestRefNo;
 
+	/** 客户端代理 */
 	private UserAgent userAgent;
 
-	@NotBlank
+	/** 版本号 */
 	private String version;
+
+	/** 语言 */
+	private String lang;
+
+	private String ip;
+
+	private String region;
 
 	public String getRequestRefNo() {
 		return requestRefNo;
@@ -39,5 +47,29 @@ public class BaseParamDTO implements Serializable {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public String getLang() {
+		return lang;
+	}
+
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
 	}
 }
