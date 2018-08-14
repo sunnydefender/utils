@@ -82,7 +82,7 @@ public class SpecialExecuteRunnable implements Runnable {
         TaskPO copyTaskPO = TaskPOBuilder.copy(taskPO);
         TaskExecuteResult result = null;
         try {
-            result = taskHandlerInterface.execute(copyTaskPO, null);
+            result = taskHandlerInterface.execute(copyTaskPO, taskPO.getParam());
         } catch (Exception e) {
             LOGGER.error("执行任务出错,executing queque process error. taskPO={}", JSON.toJSONString(taskPO), e);
             exceptionRetryTask(taskPO);
