@@ -67,7 +67,7 @@ public class TaskInitializer implements ApplicationListener<ContextRefreshedEven
                     annotation.name(), annotation.threadCount(), annotation.threadSleepMilis(), annotation.executeStrategy(),
                     beanObject.getClass().getSimpleName(), beanObject.getClass().getName());
             //启动专用executing队列处理线程
-            String handler = annotation.getClass().getSimpleName();
+            String handler = beanObject.getClass().getSimpleName();
             for (int i=0; i<annotation.threadCount(); i++) {
                 new Thread(new SpecialExecuteRunnable(handler, annotation.threadSleepMilis(), annotation.executeStrategy(),
                     (ITaskHandler) beanObject, taskManager), "special-execute-" + handler + "-" + i).start();
